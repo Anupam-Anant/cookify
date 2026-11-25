@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'Recipe Not Found — COOKify')}">
+<th:block th:fragment="content">
+    <section class="ck-hero ck-error-page">
+        <h1 class="ck-logo-big">404</h1>
+        <p class="ck-page-title">This recipe seems to have wandered off the kitchen.</p>
+        <p>We couldn't find the page you were looking for.</p>
+        <div class="ck-cta">
+            <a class="ck-btn" th:href="@{/}">Back to Home</a>
+        </div>
+    </section>
+</th:block>
+</html>

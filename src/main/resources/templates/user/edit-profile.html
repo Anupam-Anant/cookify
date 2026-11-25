@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Edit Profile · COOKify</title>
+  <link rel="stylesheet" th:href="@{/css/cookify.css}"/></head>
+<body>
+<header class="ck-header"><a class="ck-logo" th:href="@{/}">COOK<span>ify</span> 🧑‍🍳</a><div th:replace="~{layout :: langSwitcher}"></div></header>
+<main class="ck-main">
+  <h1 style="text-align:center">Edit Profile</h1>
+  <form class="ck-form" method="post" th:action="@{/profile/edit}" th:object="${form}" enctype="multipart/form-data">
+    <input type="text" th:field="*{nameFirst}" placeholder="First name"/>
+    <input type="text" th:field="*{nameLast}" placeholder="Last name"/>
+    <input type="number" th:field="*{age}" placeholder="Age"/>
+    <div class="ck-error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></div>
+    <input type="text" th:field="*{gender}" placeholder="Gender"/>
+    <textarea th:field="*{bio}" placeholder="Short bio"></textarea>
+    <div class="ck-error" th:if="${#fields.hasErrors('bio')}" th:errors="*{bio}"></div>
+    <label>Profile picture <input type="file" name="avatar" accept="image/*"/></label>
+    <label class="ck-checkbox-label">
+      <input type="checkbox" th:field="*{twoFactorEnabled}"/>
+      Enable Two-Factor Authentication
+    </label>
+    <button class="ck-btn" type="submit">Save</button>
+  </form>
+</main>
+</body>
+</html>

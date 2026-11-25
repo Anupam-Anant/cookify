@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: cookify
+  datasource:
+    url: jdbc:h2:mem:cookify;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 60MB
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail:
+        host: 127.0.0.1
+        smtp:
+          localhost: 127.0.0.1
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+server:
+  servlet:
+    session:
+      tracking-modes: COOKIE
+cookify:
+  storage:
+    upload-dir: ./uploads
+  remember-me:
+    key: ${COOKIFY_REMEMBER_ME_KEY:dev-only-remember-me-key-change-me}
+  otp:
+    resend-cooldown-seconds: 30

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, ${recipe.recipeName} + ' - COOKify')}">
+<th:block th:fragment="content">
+    <article class="ck-detail">
+        <header class="ck-detail-header">
+            <h1 th:text="${recipe.recipeName}">Recipe Name</h1>
+            <span class="ck-badge"
+                  th:classappend="${recipe.dietaryLabel() == 'Veg'} ? 'ck-badge-veg' : 'ck-badge-nonveg'"
+                  th:text="${recipe.dietaryLabel()}">Veg</span>
+        </header>
+        <p class="ck-detail-meta">
+            By <a th:href="@{'/creators/' + ${creatorName}}" th:text="${creatorName}">Chef</a>
+            &middot; <span th:text="${recipe.views} + ' views'">0 views</span>
+        </p>
+
+        <div class="ck-owner-actions" th:if="${isOwner}">
+            <a class="ck-btn" th:href="@{'/recipes/' + ${recipe.id} + '/edit'}">Edit</a>
+            <form method="post" th:action="@{'/recipes/' + ${recipe.id} + '/delete'}">
+                <button class="ck-btn ck-btn-delete" type="submit">Delete</button>
+            </form>
+        </div>
+
+        <div class="ck-detail-actions">
+            <form method="post" th:if="${authenticated and !saved}" th:action="@{'/recipes/' + ${recipe.id} + '/save'}">
+                <button class="ck-btn" type="submit">Save</button>
+            </form>
+            <form method="post" th:if="${authenticated and saved}" th:action="@{'/recipes/' + ${recipe.id} + '/unsave'}">
+                <button class="ck-btn ck-btn-saved" type="submit">Saved &#x2713;</button>
+            </form>
+            <button class="ck-btn ck-share-btn" type="button" id="ck-share-btn"
+                    th:attr="data-share-url=@{'/recipes/' + ${recipe.id}}">Share</button>
+            <span id="ck-share-feedback" class="ck-share-feedback" hidden="hidden">Link copied!</span>
+        </div>
+        <!-- Externalized under /js/** (CSP script-src has no 'unsafe-inline'). -->
+        <script th:src="@{/js/recipe-detail.js}"></script>
+
+        <div class="ck-detail-media">
+            <img th:if="${recipe.imagePath}" th:src="@{'/uploads/' + ${recipe.imagePath}}" alt="Recipe photo"/>
+            <video th:if="${recipe.recipeVideo}" controls="controls">
+                <source th:src="@{'/uploads/' + ${recipe.recipeVideo}}"/>
+            </video>
+        </div>
+
+        <div class="ck-detail-stats">
+            <span th:if="${recipe.cost != null}" th:text="'Cost: Rs. ' + ${recipe.cost}">Cost</span>
+            <span th:if="${recipe.speed != null}" th:text="'Speed: ' + ${recipe.speed} + '/5'">Speed</span>
+            <span th:if="${recipe.difficulty != null}" th:text="'Difficulty: ' + ${recipe.difficulty} + '/5'">Difficulty</span>
+        </div>
+
+        <section class="ck-ingredients" th:if="${recipe.ingredient}">
+            <h2>Ingredients</h2>
+            <p th:text="${recipe.ingredient}">Ingredients</p>
+        </section>
+
+        <section class="ck-steps">
+            <h2>Method</h2>
+            <ol>
+                <li th:each="step : ${steps}" th:text="${step}">Step</li>
+            </ol>
+        </section>
+
+        <section class="ck-ratings">
+            <h2>Ratings &amp; Comments</h2>
+            <p class="ck-rating-summary">
+                <span th:text="${ratingSummary.average} + ' / 5'">0.0 / 5</span>
+                <span th:text="'(' + ${ratingSummary.count} + ' ratings)'">(0 ratings)</span>
+            </p>
+
+            <form th:if="${authenticated}" class="ck-form ck-rate-form" method="post"
+                  th:action="@{'/recipes/' + ${recipe.id} + '/rate'}">
+                <label for="stars">Your rating</label>
+                <select id="stars" name="stars" required="required">
+                    <option value="5">5 - Excellent</option>
+                    <option value="4">4 - Good</option>
+                    <option value="3">3 - Average</option>
+                    <option value="2">2 - Poor</option>
+                    <option value="1">1 - Terrible</option>
+                </select>
+                <button class="ck-btn" type="submit">Rate</button>
+            </form>
+
+            <div class="ck-comments">
+                <h3>Comments</h3>
+                <p class="ck-error" th:if="${commentError}" th:text="${commentError}">Error</p>
+                <p class="ck-empty" th:if="${#lists.isEmpty(comments)}">No comments yet &mdash; be the first!</p>
+                <ul th:unless="${#lists.isEmpty(comments)}">
+                    <li th:each="c : ${comments}">
+                        <strong th:text="${c.username}">user</strong>: <span th:text="${c.text}">comment</span>
+                    </li>
+                </ul>
+                <form th:if="${authenticated}" class="ck-form ck-comment-form" method="post"
+                      th:action="@{'/recipes/' + ${recipe.id} + '/comment'}">
+                    <textarea name="text" placeholder="Add a comment" rows="2" required="required"></textarea>
+                    <button class="ck-btn" type="submit">Post Comment</button>
+                </form>
+            </div>
+
+            <form th:if="${authenticated and !isOwner and !subscribed}" method="post"
+                  th:action="@{'/creators/' + ${recipe.recipeCreatorId} + '/subscribe'}">
+                <input type="hidden" name="redirectTo" th:value="@{'/recipes/' + ${recipe.id}}"/>
+                <button class="ck-btn" type="submit">Subscribe to Chef</button>
+            </form>
+            <form th:if="${authenticated and !isOwner and subscribed}" method="post"
+                  th:action="@{'/creators/' + ${recipe.recipeCreatorId} + '/unsubscribe'}">
+                <input type="hidden" name="redirectTo" th:value="@{'/recipes/' + ${recipe.id}}"/>
+                <button class="ck-btn" type="submit">Unsubscribe</button>
+            </form>
+        </section>
+    </article>
+</th:block>
+</html>

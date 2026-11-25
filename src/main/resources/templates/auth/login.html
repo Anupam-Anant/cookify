@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Login · COOKify</title>
+  <link rel="stylesheet" th:href="@{/css/cookify.css}"/></head>
+<body>
+<header class="ck-header"><a class="ck-logo" th:href="@{/}">COOK<span>ify</span> 🧑‍🍳</a><div th:replace="~{layout :: langSwitcher}"></div></header>
+<main class="ck-main">
+  <h1 style="text-align:center">Login</h1>
+  <div class="ck-error" th:if="${param.error}">Invalid credentials, or this account is temporarily locked after repeated failed attempts. Try again later.</div>
+  <div th:if="${param.registered}">Account created — please log in.</div>
+  <form class="ck-form" method="post" th:action="@{/login}">
+    <input type="text" name="username" placeholder="Username / Email / Phone Number"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <label><input type="checkbox" name="remember-me"/> Remember me on this device</label>
+    <button class="ck-btn" type="submit">Confirm Login</button>
+  </form>
+  <p style="text-align:center"><a th:href="@{/password/forgot}">Forgot Password?</a></p>
+</main>
+</body>
+</html>

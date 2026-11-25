@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'Chat - COOKify')}">
+<th:block th:fragment="content">
+    <h1 class="ck-page-title">Chat</h1>
+
+    <!-- data-current-user-id passes the server-known user id to chat.js without inlining
+         Thymeleaf-interpolated values into a <script> body (blocked under the strict CSP). -->
+    <div id="chat-app" th:attr="data-current-user-id=${currentUserId}">
+        <form id="chat-open-form" class="ck-filters">
+            <input type="number" id="other-user-id" placeholder="Other user's ID" min="1" required="required"/>
+            <button class="ck-btn" type="submit">Open conversation</button>
+        </form>
+
+        <div id="chat-window" class="ck-chat-window" hidden="hidden">
+            <ul id="chat-messages" class="ck-chat-messages"></ul>
+            <form id="chat-send-form" class="ck-chat-send ck-filters">
+                <input type="text" id="chat-body" placeholder="Type a message..." required="required" autocomplete="off"/>
+                <button class="ck-btn" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Externalized under /js/** (CSP script-src has no 'unsafe-inline'). -->
+    <script th:src="@{/js/chat.js}"></script>
+</th:block>
+</html>

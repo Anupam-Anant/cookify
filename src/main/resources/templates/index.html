@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'COOKify')}">
+<th:block th:fragment="content">
+    <section class="ck-hero">
+        <h1 class="ck-logo-big">COOK<span>ify</span></h1>
+        <div class="ck-cta">
+            <a class="ck-btn" th:href="@{/login}">Login</a>
+            <a class="ck-btn" th:href="@{/signup}">Sign Up</a>
+        </div>
+    </section>
+</th:block>
+</html>

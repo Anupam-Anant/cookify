@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Sign Up · COOKify</title>
+  <link rel="stylesheet" th:href="@{/css/cookify.css}"/></head>
+<body>
+<header class="ck-header"><a class="ck-logo" th:href="@{/}">COOK<span>ify</span> 🧑‍🍳</a><div th:replace="~{layout :: langSwitcher}"></div></header>
+<main class="ck-main">
+  <h1 style="text-align:center">Sign Up</h1>
+  <form class="ck-form" method="post" th:action="@{/signup}" th:object="${form}">
+    <input type="text" th:field="*{username}" placeholder="Username"/>
+    <div class="ck-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
+    <input type="email" th:field="*{email}" placeholder="Email"/>
+    <div class="ck-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+    <input type="text" th:field="*{phone}" placeholder="Phone Number"/>
+    <div class="ck-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+    <input type="password" th:field="*{password}" placeholder="Password"/>
+    <div class="ck-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+    <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password"/>
+    <div class="ck-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+    <button class="ck-btn" type="submit">Confirm Sign Up</button>
+  </form>
+</main>
+</body>
+</html>

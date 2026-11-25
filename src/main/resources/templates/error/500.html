@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'Something Went Wrong — COOKify')}">
+<th:block th:fragment="content">
+    <section class="ck-hero ck-error-page">
+        <h1 class="ck-logo-big">500</h1>
+        <p class="ck-page-title">Something burned in the kitchen.</p>
+        <p>An unexpected error occurred on our end. Please try again in a moment.</p>
+        <div class="ck-cta">
+            <a class="ck-btn" th:href="@{/}">Back to Home</a>
+        </div>
+    </section>
+</th:block>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Profile · COOKify</title>
+  <link rel="stylesheet" th:href="@{/css/cookify.css}"/></head>
+<body>
+<header class="ck-header"><a class="ck-logo" th:href="@{/}">COOK<span>ify</span> 🧑‍🍳</a>
+  <nav><a th:href="@{/profile/edit}">Edit profile</a> <a th:href="@{/logout}">Logout</a></nav>
+  <div th:replace="~{layout :: langSwitcher}"></div></header>
+<main class="ck-main">
+  <img th:if="${user.profileImagePath}" th:src="@{'/uploads/' + ${user.profileImagePath}}" class="ck-avatar" alt="Profile picture"/>
+  <div th:unless="${user.profileImagePath}" class="ck-avatar ck-avatar-placeholder">&#x1F9D1;&#x200D;&#x1F373;</div>
+  <h1 th:text="${user.username}">username</h1>
+  <p th:text="${user.bio}">bio</p>
+  <p th:text="|${user.nameFirst} ${user.nameLast} · Age ${user.age}|"></p>
+  <p class="ck-2fa-status" th:text="${user.twoFactorEnabled} ? 'Two-Factor Authentication: Enabled' : 'Two-Factor Authentication: Disabled'">Two-Factor Authentication: Disabled</p>
+
+  <div class="ck-profile-counts">
+    <span th:text="'Followers: ' + ${followerCount}">Followers: 0</span>
+    <span th:text="'Following: ' + ${followingCount}">Following: 0</span>
+  </div>
+
+  <section class="ck-profile-section">
+    <h2>My Uploaded Recipes</h2>
+    <p class="ck-empty" th:if="${#lists.isEmpty(uploadedRecipes)}">You haven't uploaded any recipes yet.</p>
+    <ul class="ck-recipe-list" th:unless="${#lists.isEmpty(uploadedRecipes)}">
+      <li th:each="r : ${uploadedRecipes}">
+        <a th:href="@{'/recipes/' + ${r.id}}" th:text="${r.recipeName}">Recipe</a>
+        <a class="ck-btn ck-btn-small" th:href="@{'/recipes/' + ${r.id} + '/edit'}">Edit</a>
+        <form method="post" style="display:inline" th:action="@{'/recipes/' + ${r.id} + '/delete'}">
+          <button class="ck-btn ck-btn-small ck-btn-delete" type="submit">Delete</button>
+        </form>
+      </li>
+    </ul>
+  </section>
+
+  <section class="ck-profile-section">
+    <h2>Saved Recipes</h2>
+    <p class="ck-empty" th:if="${#lists.isEmpty(savedRecipes)}">You haven't saved any recipes yet.</p>
+    <ul class="ck-recipe-list" th:unless="${#lists.isEmpty(savedRecipes)}">
+      <li th:each="r : ${savedRecipes}">
+        <a th:href="@{'/recipes/' + ${r.id}}" th:text="${r.recipeName}">Recipe</a>
+      </li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>

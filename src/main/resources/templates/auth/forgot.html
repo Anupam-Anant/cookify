@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Forgot Password · COOKify</title>
+  <link rel="stylesheet" th:href="@{/css/cookify.css}"/></head>
+<body>
+<header class="ck-header"><a class="ck-logo" th:href="@{/}">COOK<span>ify</span> 🧑‍🍳</a><div th:replace="~{layout :: langSwitcher}"></div></header>
+<main class="ck-main">
+  <h1 style="text-align:center">Forgot Password?</h1>
+  <form class="ck-form" method="post" th:action="@{/password/forgot}">
+    <input type="text" name="identifier" placeholder="Username / Email / Phone Number"/>
+    <button class="ck-btn" type="submit">Send Reset Code</button>
+  </form>
+</main>
+</body>
+</html>

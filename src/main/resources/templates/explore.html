@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'Explore Recipes - COOKify')}">
+<th:block th:fragment="content">
+    <h1 class="ck-page-title">Explore Recipes</h1>
+    <form class="ck-filters" method="get" th:action="@{/explore}">
+        <div class="ck-search-scopes">
+            <label><input type="checkbox" name="searchInTitle" value="true"
+                          th:checked="${filter.searchInTitle == null or filter.searchInTitle}"/> Title</label>
+            <label><input type="checkbox" name="searchInCreator" value="true"
+                          th:checked="${filter.searchInCreator == null or filter.searchInCreator}"/> Creator</label>
+            <label><input type="checkbox" name="searchInType" value="true"
+                          th:checked="${filter.searchInType == null or filter.searchInType}"/> Type</label>
+        </div>
+
+        <div class="ck-search-row">
+            <input type="text" name="query" placeholder="Search by title, creator, or type" th:value="${filter.query}"/>
+            <button class="ck-btn" type="submit">Search</button>
+        </div>
+
+        <details class="ck-more-filters">
+            <summary>More filters</summary>
+            <div class="ck-more-filters-body">
+                <select name="veg" aria-label="Dietary type">
+                    <option value="" th:selected="${filter.veg == null}">All (Veg &amp; Non-Veg)</option>
+                    <option value="true" th:selected="${filter.veg != null and filter.veg}">Veg only</option>
+                    <option value="false" th:selected="${filter.veg != null and !filter.veg}">Non-Veg only</option>
+                </select>
+
+                <input type="text" name="ingredient" placeholder="Ingredient" th:value="${filter.ingredient}"/>
+
+                <input type="number" name="maxCost" placeholder="Max cost (Rs.)" min="0" th:value="${filter.maxCost}"/>
+
+                <input type="number" name="maxCookingTime" placeholder="Max cooking time (min)" min="0" th:value="${filter.maxCookingTime}"/>
+
+                <input type="number" name="maxCalories" placeholder="Max calories" min="0" th:value="${filter.maxCalories}"/>
+
+                <label class="ck-slider-label">Min speed
+                    <input type="range" name="minSpeed" min="1" max="5" step="1"
+                           th:value="${filter.minSpeed} ?: 1"/>
+                </label>
+                <label class="ck-slider-label">Min difficulty
+                    <input type="range" name="minDifficulty" min="1" max="5" step="1"
+                           th:value="${filter.minDifficulty} ?: 1"/>
+                </label>
+
+                <select name="sort" aria-label="Sort by">
+                    <option value="popular" th:selected="${filter.sort == null or filter.sort == 'popular'}">Most Popular</option>
+                    <option value="newest" th:selected="${filter.sort == 'newest'}">Newest</option>
+                    <option value="rating" th:selected="${filter.sort == 'rating'}">Top Rated</option>
+                </select>
+            </div>
+        </details>
+    </form>
+
+    <p class="ck-empty" th:if="${#lists.isEmpty(recipes)}">No recipes match your search &mdash; try different filters!</p>
+
+    <div class="ck-carousel-wrap" th:unless="${#lists.isEmpty(recipes)}">
+        <button type="button" class="ck-carousel-arrow ck-carousel-prev" aria-label="Scroll left">&#8249;</button>
+        <div class="ck-carousel" id="ck-recipe-carousel">
+            <div class="ck-card" th:each="card : ${recipes}"
+                 th:classappend="${card.recipe.dietaryLabel() == 'Veg'} ? 'ck-card-veg' : 'ck-card-nonveg'">
+                <div class="ck-card-media">
+                    <img th:if="${card.recipe.imagePath}" th:src="@{'/uploads/' + ${card.recipe.imagePath}}" alt="Recipe photo"/>
+                    <div th:unless="${card.recipe.imagePath}" class="ck-card-placeholder">&#x1F37D;&#xFE0F;</div>
+                </div>
+                <div class="ck-card-body">
+                    <span class="ck-badge"
+                          th:classappend="${card.recipe.dietaryLabel() == 'Veg'} ? 'ck-badge-veg' : 'ck-badge-nonveg'">
+                        <span class="ck-dot"
+                              th:classappend="${card.recipe.dietaryLabel() == 'Veg'} ? 'ck-dot-veg' : 'ck-dot-nonveg'"></span>
+                        <span th:text="${card.recipe.dietaryLabel()}">Veg</span>
+                    </span>
+                    <h3 th:text="${card.recipe.recipeName}">Recipe Name</h3>
+                    <p th:text="'By ' + ${card.creatorName}">By Chef</p>
+                    <p class="ck-card-ingredient"
+                       th:text="${card.recipe.ingredient != null ? #strings.abbreviate(card.recipe.ingredient, 90) : ''}">Ingredients preview</p>
+                    <p class="ck-card-rating"
+                       th:text="${card.ratingSummary.count} + ' ratings | Avg ' + ${card.ratingSummary.average}">0 ratings | Avg 0.0</p>
+                    <a class="ck-btn ck-open" th:href="@{'/recipes/' + ${card.recipe.id}}">Open recipe</a>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="ck-carousel-arrow ck-carousel-next" aria-label="Scroll right">&#8250;</button>
+    </div>
+    <script th:src="@{/js/explore-carousel.js}"></script>
+</th:block>
+</html>

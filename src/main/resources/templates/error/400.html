@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'Bad Request — COOKify')}">
+<th:block th:fragment="content">
+    <section class="ck-hero ck-error-page">
+        <h1 class="ck-logo-big">400</h1>
+        <p class="ck-page-title">That recipe request doesn't quite add up.</p>
+        <p>The request couldn't be understood — please check what you submitted and try again.</p>
+        <div class="ck-cta">
+            <a class="ck-btn" th:href="@{/}">Back to Home</a>
+        </div>
+    </section>
+</th:block>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, ${creator.username} + ' - COOKify')}">
+<th:block th:fragment="content">
+    <div style="text-align:center">
+        <img th:if="${creator.profileImagePath}" th:src="@{'/uploads/' + ${creator.profileImagePath}}" class="ck-avatar" alt="Profile picture"/>
+        <div th:unless="${creator.profileImagePath}" class="ck-avatar ck-avatar-placeholder">&#x1F9D1;&#x200D;&#x1F373;</div>
+    </div>
+    <h1 class="ck-page-title" th:text="${creator.username}">username</h1>
+    <p style="text-align:center" th:if="${creator.bio}" th:text="${creator.bio}">bio</p>
+
+    <div class="ck-profile-counts" style="justify-content:center">
+        <span th:text="'Followers: ' + ${followerCount}">Followers: 0</span>
+        <span th:text="'Following: ' + ${followingCount}">Following: 0</span>
+    </div>
+
+    <div style="text-align:center;margin:14px 0">
+        <form th:if="${authenticated and !isSelf and !subscribed}" method="post"
+              th:action="@{'/creators/' + ${creator.id} + '/subscribe'}">
+            <input type="hidden" name="redirectTo" th:value="@{'/creators/' + ${creator.username}}"/>
+            <button class="ck-btn" type="submit">Subscribe to Chef</button>
+        </form>
+        <form th:if="${authenticated and !isSelf and subscribed}" method="post"
+              th:action="@{'/creators/' + ${creator.id} + '/unsubscribe'}">
+            <input type="hidden" name="redirectTo" th:value="@{'/creators/' + ${creator.username}}"/>
+            <button class="ck-btn" type="submit">Unsubscribe</button>
+        </form>
+    </div>
+
+    <section class="ck-profile-section">
+        <h2>Uploaded Recipes</h2>
+        <p class="ck-empty" th:if="${#lists.isEmpty(uploadedRecipes)}">No recipes uploaded yet.</p>
+        <ul class="ck-recipe-list" th:unless="${#lists.isEmpty(uploadedRecipes)}">
+            <li th:each="r : ${uploadedRecipes}">
+                <a th:href="@{'/recipes/' + ${r.id}}" th:text="${r.recipeName}">Recipe</a>
+            </li>
+        </ul>
+    </section>
+</th:block>
+</html>

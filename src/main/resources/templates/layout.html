@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html th:fragment="html(content, title)" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">COOKify</title>
+    <link rel="stylesheet" th:href="@{/css/cookify.css}"/>
+</head>
+<body>
+<header class="ck-header">
+    <a class="ck-logo" th:href="@{/}">COOK<span>ify</span> &#x1F9D1;&#x200D;&#x1F373;</a>
+    <nav>
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/explore}">Explore</a>
+        <a th:href="@{/recipes/new}">Become a Creator</a>
+        <a th:href="@{/chat}">Chat</a>
+    </nav>
+    <div class="ck-header-right">
+        <div class="ck-user-area">
+            <th:block sec:authorize="isAuthenticated()">
+                <span class="ck-username" sec:authentication="name">user</span>
+                <form th:action="@{/logout}" method="post" class="ck-logout-form">
+                    <button type="submit" class="ck-logout">Logout</button>
+                </form>
+            </th:block>
+            <th:block sec:authorize="!isAuthenticated()">
+                <a class="ck-auth-link" th:href="@{/login}">Login</a>
+                <a class="ck-auth-link" th:href="@{/signup}">Sign Up</a>
+            </th:block>
+        </div>
+        <!--
+          Google Translate widget + language switcher: a tiny, dependency-free
+          multilingual affordance. Offers English plus Hindi/Mandarin/Russian/Spanish/French,
+          matching spec test case 12. Defined once, here, as a named fragment so every page can
+          pull it in — pages that render through this shared layout get it automatically via the
+          header above; standalone pages that keep their own `<header>` (auth pages, profile)
+          explicitly th:replace="~{layout :: langSwitcher}" it into their header. It is NOT also
+          th:replace'd into this header — it IS this header's copy — so it renders exactly once.
+          The SecurityConfig CSP has been widened to allow the translate.google.com /
+          translate.googleapis.com / www.gstatic.com / fonts.googleapis.com / fonts.gstatic.com
+          hosts this widget needs.
+        -->
+        <div th:fragment="langSwitcher" class="ck-lang-switcher">
+            <select id="ck-lang-select" class="ck-lang-select" aria-label="Select language">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+                <option value="zh-CN">Mandarin</option>
+                <option value="ru">Russian</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+            </select>
+            <div id="google_translate_element"></div>
+            <!-- Externalized under /js/** (CSP script-src has no 'unsafe-inline') — MUST load
+                 before the Google loader below, which invokes window.googleTranslateElementInit
+                 on completion. -->
+            <script th:src="@{/js/lang-switcher.js}"></script>
+            <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+        </div>
+    </div>
+</header>
+<main class="ck-main" th:insert="${content}">content</main>
+
+<footer class="ck-footer">
+    <div><strong>Contact Us</strong><br/>+91 1234567890<br/>+91 0987654321</div>
+    <div><a href="#">Learn More</a> &middot; <a href="#">About Us</a></div>
+</footer>
+</body>
+</html>

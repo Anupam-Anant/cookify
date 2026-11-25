@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, 'Access Denied — COOKify')}">
+<th:block th:fragment="content">
+    <section class="ck-hero ck-error-page">
+        <h1 class="ck-logo-big">403</h1>
+        <p class="ck-page-title">This part of the kitchen is off-limits.</p>
+        <p>Only the chef who created this belongs here — you don't have permission to do that.</p>
+        <div class="ck-cta">
+            <a class="ck-btn" th:href="@{/}">Back to Home</a>
+        </div>
+    </section>
+</th:block>
+</html>

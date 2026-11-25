@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Two-Factor · COOKify</title>
+  <link rel="stylesheet" th:href="@{/css/cookify.css}"/></head>
+<body>
+<header class="ck-header"><a class="ck-logo" th:href="@{/}">COOK<span>ify</span> 🧑‍🍳</a><div th:replace="~{layout :: langSwitcher}"></div></header>
+<main class="ck-main">
+  <h1 style="text-align:center">Enter your 6-digit code</h1>
+  <p style="text-align:center">We emailed a one-time code to your address.</p>
+  <div class="ck-error" th:if="${error}" th:text="${error}"></div>
+  <form class="ck-form" method="post" th:action="@{/2fa}">
+    <input type="text" name="code" placeholder="2FA OTP" maxlength="6"/>
+    <input type="hidden" name="remember-me" value="on" th:if="${rememberMe}"/>
+    <button class="ck-btn" type="submit">Confirm Login</button>
+  </form>
+</main>
+</body>
+</html>

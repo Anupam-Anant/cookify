@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: html(~{::content}, ${pageTitle})}">
+<th:block th:fragment="content">
+    <h1 class="ck-page-title" th:text="${pageTitle}">Share Your Recipe</h1>
+    <form class="ck-form ck-recipe-form" method="post"
+          th:action="${editing} ? @{'/recipes/' + ${recipeId}} : @{/recipes}"
+          th:object="${form}"
+          enctype="multipart/form-data">
+        <input type="text" th:field="*{recipeName}" placeholder="Add Title" required="required"/>
+        <div class="ck-error" th:if="${#fields.hasErrors('recipeName')}" th:errors="*{recipeName}"></div>
+        <textarea th:field="*{ingredient}" placeholder="Ingredients (one per line)" rows="3"></textarea>
+        <div class="ck-error" th:if="${#fields.hasErrors('ingredient')}" th:errors="*{ingredient}"></div>
+        <textarea th:field="*{recipeMethod}" placeholder="Steps (one per line)" rows="5"></textarea>
+        <div class="ck-error" th:if="${#fields.hasErrors('recipeMethod')}" th:errors="*{recipeMethod}"></div>
+
+        <fieldset class="ck-veg-toggle" th:if="${!editing}">
+            <legend>Dietary Type</legend>
+            <label><input type="radio" th:field="*{veg}" value="true"/> Veg</label>
+            <label><input type="radio" th:field="*{veg}" value="false"/> Non-Veg</label>
+        </fieldset>
+        <!-- The recipe_type discriminator (veg/non-veg) is an immutable JPA subtype once a
+             recipe is created — it cannot change on edit. Shown read-only here; the server
+             ignores any "veg" value submitted from this page (RecipeService always derives
+             recipe_category.veg_nonveg from the persisted recipe's own type). -->
+        <fieldset class="ck-veg-toggle ck-veg-readonly" th:if="${editing}">
+            <legend>Dietary Type</legend>
+            <p><strong th:text="${form.veg} ? 'Veg' : 'Non-Veg'">Veg</strong> (cannot be changed after creation)</p>
+        </fieldset>
+
+        <div class="ck-upload">
+            <label class="ck-upload-box">Recipe Photo
+                <input type="file" name="image" accept="image/png,image/jpeg,image/webp"/>
+            </label>
+            <label class="ck-upload-box">Recipe Video
+                <input type="file" name="video" accept="video/mp4,video/webm"/>
+            </label>
+        </div>
+
+        <div class="ck-grid">
+            <input type="number" th:field="*{cost}" placeholder="Cost (Rs.)"/>
+            <input type="number" th:field="*{speed}" placeholder="Speed (1-5)" min="1" max="5"/>
+            <input type="number" th:field="*{difficulty}" placeholder="Difficulty (1-5)" min="1" max="5"/>
+            <input type="number" th:field="*{cookingTime}" placeholder="Cooking Time (min)"/>
+            <input type="number" th:field="*{calory}" placeholder="Calories"/>
+            <input type="number" th:field="*{protin}" placeholder="Protein (g)"/>
+        </div>
+        <div class="ck-error" th:if="${#fields.hasErrors('cost')}" th:errors="*{cost}"></div>
+        <div class="ck-error" th:if="${#fields.hasErrors('speed')}" th:errors="*{speed}"></div>
+        <div class="ck-error" th:if="${#fields.hasErrors('difficulty')}" th:errors="*{difficulty}"></div>
+        <div class="ck-error" th:if="${#fields.hasErrors('cookingTime')}" th:errors="*{cookingTime}"></div>
+        <div class="ck-error" th:if="${#fields.hasErrors('calory')}" th:errors="*{calory}"></div>
+
+        <button class="ck-btn" type="submit" th:text="${editing} ? 'Save Changes' : 'Publish Recipe'">Publish Recipe</button>
+    </form>
+</th:block>
+</html>
